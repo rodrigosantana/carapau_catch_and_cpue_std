@@ -1,0 +1,4 @@
+## Files that git must to ignore
+.csv
+.Rhistory
+.RData

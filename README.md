@@ -1,2 +1,5 @@
-# carapau_catch_and_cpue_std
-Carapau Catch and CPUE standardization
+# Carapau (*Caranx crysos*) Catch Analysis and CPUE Standardization
+
+This repository is part of a consultancy carried out to evaluate the stock of horse mackerel (*Caranx crysos*) in southeastern Brazil.
+
+ 

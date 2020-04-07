@@ -96,8 +96,6 @@ db06 <- read.table("data/FishBase_Caranx_crysos_distribution_ver01.csv",
 db07 <- read.table("data/FishBase_Caranx_crysos_environmental_data.csv",
                    header = TRUE, sep = ",", dec = ".")
 
-
-
 ########################################################################
 ######@> Cleaning and tidying datasets...
 
@@ -195,7 +193,7 @@ p01 <- tm_shape(World, xlim = c(-50, -30), ylim = c(-28, -18)) +
     tm_polygons() +
     tm_grid(x = seq(-50, -30, by = 5), y = seq(-28, -18, by = 2)) +
     tm_shape(tmp) +
-    tm_dots(col = "probability", palette = "plasma", size = 2,
+    tm_dots(col = "probability", palette = "plasma", size = 1,
             title = "Probability", shape = 16) +
     tm_xlab(text = "Longitude", size = 1) +
     tm_ylab(text = "Latitude", size = 1) +
@@ -215,7 +213,8 @@ p03 <- db01 %>%
     ggplot(data = ., aes(x = year, y = catch)) +
     geom_line() +
     geom_point(pch = 21, fill = "white", colour = "black", size = 5) +
-    labs(x = "Year", y = "Total catch (t)") +
+    labs(x = "Year", y = "Total catch (t)",
+         caption = "Source: Rebuilding fish catches") +
     facet_wrap(~ sector, scales = "free_x") +
     scale_x_continuous(limits = c(1978, 2007)) +
     scale_y_continuous(expand = c(0, 0), limits = c(-5, 1250)) +
@@ -325,6 +324,34 @@ p09 <- sc %>%
     scale_y_continuous(expand = c(0, 0), limits = c(-300, 3000)) +
     my_theme()
 p09
+
+######@> Creating a mosaic plots to save...
+
+#####@> Creating a new folder to save figs...
+dir.create("Figs")
+
+#####@> Maping distribution...
+png("Figs/Carapau_spatial_distribution.png", units = "cm", res = 200,
+    width = 35, height = 35)
+print(p00)
+dev.off()
+
+png("Figs/Zoom_Carapau_spatial_distribution.png", units = "cm", res = 200,
+    width = 35, height = 35)
+print(p01)
+dev.off()
+
+#####@> Production data...
+png("Figs/Catches_dataset_comparison.png", units = "cm", res = 200,
+    width = 35, height = 30)
+p03 /
+    (p04 | p07) /
+    (p05 | p08) /
+    (p06 | p09)
+dev.off()
+
+########################################################################
+######@> Concatenating datasets ...
 
 
 

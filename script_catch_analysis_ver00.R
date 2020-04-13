@@ -328,7 +328,7 @@ p09
 ######@> Creating a mosaic plots to save...
 
 #####@> Creating a new folder to save figs...
-dir.create("Figs")
+dir.create("Figs") ## Run only one time...
 
 #####@> Maping distribution...
 png("Figs/Carapau_spatial_distribution.png", units = "cm", res = 200,
@@ -353,7 +353,103 @@ dev.off()
 ########################################################################
 ######@> Concatenating datasets ...
 
+######@> Merging datasets...
 
+#####@> Time series default...
+tmp00 <- data.frame(year = seq(1978, 2019, 1))
+
+#####@> Rebuilding fisheries catches...
+tmp01 <- db01 %>%
+    group_by(year) %>%
+    summarise(rebuild = sum(catch, na.rm = TRUE)) %>%
+    as.data.frame()
+
+#####@> PMAP-SP...
+tmp02 <- db02 %>%
+    group_by(year) %>%
+    summarise(pmap.sp = sum(catch, na.rm = TRUE)) %>%
+    as.data.frame()
+
+#####@> PMAP-SC...
+tmp03 <- sc %>%
+    group_by(year) %>%
+    summarise(pmap.sc = sum(catch, na.rm = TRUE)) %>%
+    as.data.frame()
+
+#####@> Full merging...
+db <- tmp00 %>%
+    left_join(tmp01, by = "year") %>%
+    left_join(tmp02, by = "year") %>%
+    left_join(tmp03, by = "year")
+
+######@> Estimate the total catches (SP + SC)...
+db$total <- with(db, pmap.sp + pmap.sc)
+
+#####@> Watching the total catches...
+
+####@> simulating ggplot default colors...
+gg_color_hue <- function(n) {
+    hues = seq(15, 375, length = n + 1)
+    hcl(h = hues, l = 65, c = 100)[1:n]
+}
+col <- gg_color_hue(4)
+
+####@> figure...
+tmp <- db %>%
+    select(year, rebuild, total) %>%
+    gather(., key = "Dataset", "values", 2:3) %>%
+    as.data.frame()
+p10 <- ggplot(data = tmp, aes(x = year, y = values,
+                              colour = Dataset, fill = Dataset)) +
+    geom_line(alpha = 0.2, size = 1.4) +
+    geom_point(pch = 21, size = 6, alpha = 0.5) +
+    labs(x = "Year", y = "Total catch (t)") +
+    scale_x_continuous(limits = c(1978, 2020),
+                       breaks = seq(1978, 2020, 2)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 2000)) +
+    scale_colour_manual(values = col[3:4]) +
+    scale_fill_manual(values = col[3:4]) +
+    my_theme() +
+    theme(legend.position = c(0.96, 0.95))
+p10
+
+######@> Creating scenarios - based on proportions observed in other
+######@> states...
+final <- db %>%
+    select(year, total) %>%
+    rename(scenario01 = total) %>%
+    mutate(scenario02 = scenario01 * 1.4,
+           scenario03 = scenario01 * 1.5,
+           scenario04 = scenario01 * 1.6) %>%
+    filter(!is.na(scenario01)) %>%
+    as.data.frame()
+
+####@> figure...
+tmp <- final %>%
+    gather(., key = "Scenarios", "values", 2:5) %>%
+    as.data.frame()
+p11 <- ggplot(data = tmp, aes(x = year, y = values, fill = Scenarios)) +
+    geom_area(colour = "black", alpha = 0.5) +
+    labs(x = "Year", y = "Total catch (t)") +
+    scale_x_continuous(limits = c(2000, 2020),
+                       breaks = seq(2000, 2020, 1)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 10000)) +
+    my_theme() +
+    theme(legend.position = c(0.96, 0.93))
+p11
+
+#####@> Comparison between series and building scenarios...
+png("Figs/Catches_time_series_and_scenarios.png", units = "cm", res = 200,
+    width = 35, height = 30)
+p10 / p11
+dev.off()
+
+########################################################################
+######@> Exporting final data base...
+
+######@> Exporting dataset with distinct scenarios...
+write.table(final, "data/Final_input_catch_data_ver00.csv",
+            row.names = FALSE, sep = ",", dec = ".")
 
 ########################################################################
 ##

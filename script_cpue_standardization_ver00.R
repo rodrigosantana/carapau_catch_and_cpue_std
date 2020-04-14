@@ -66,10 +66,83 @@ options(scipen = 10)
 
 ######@> Cerco SC...
 db01 <- read.table("data/input_cerco_carapau_CPUE_SC.csv",
-                   header = TRUE, sep = ";", dec = ",",
+                   header = TRUE, sep = ";", dec = ".",
                    fileEncoding = "ISO-8859-1")
 
+########################################################################
+######@> Cleaning and tidying data...
 
+######@> Renaming variables...
+names(db01) <- c("year", "month", "gear", "spp", "catch", "trips")
+
+######@> Creating a new variable - season...
+db01$season <- ifelse(db01$month <= 3, 1,
+               ifelse(db01$month <= 6, 2,
+               ifelse(db01$month <= 9, 3, 4)))
+
+######@> Creating two new variables - cpue (t/trip) and logcpue...
+db01$cpue <- with(db01, (catch/1000)/trips)
+db01$logcpue <- log(db01$cpue)
+
+########################################################################
+######@> Exploring data set...
+
+######@> Watching to the time series distributions of Catches, Effort
+######@> and Nominal CPUE...
+tab01 <- db01 %>%
+    group_by(year) %>%
+    summarise(C = sum(catch/1000, na.rm = TRUE),
+              E = sum(trips, na.rm = TRUE)) %>%
+    mutate(U = C/E) %>%
+    as.data.frame()
+
+p00 <- ggplot(data = tab01, aes(x = year, y = C)) +
+    geom_line() +
+    geom_point(pch = 21, colour = "black", fill = "white", size = 5) +
+    stat_smooth(method = "gam", formula = y ~ s(x, bs = 'cc', k = 20),
+                se = TRUE, alpha = 0.5) +
+    labs(x = "Year", y = "Catches (t)") +
+    scale_x_continuous(breaks = seq(2000, 2019, 2),
+                       limits = c(2000, 2019)) +
+    my_theme()
+p00
+
+p01 <- ggplot(data = tab01, aes(x = year, y = E)) +
+    geom_line() +
+    geom_point(pch = 21, colour = "black", fill = "white", size = 5) +
+    stat_smooth(method = "gam", formula = y ~ s(x, bs = 'cc', k = 20),
+                se = TRUE, alpha = 0.5) +
+    labs(x = "Year", y = "Effort (Number of trips)") +
+    scale_x_continuous(breaks = seq(2000, 2019, 2),
+                       limits = c(2000, 2019)) +
+    my_theme()
+p01
+
+p02 <- ggplot(data = tab01, aes(x = year, y = U)) +
+    geom_line() +
+    geom_point(pch = 21, colour = "black", fill = "white", size = 5) +
+    stat_smooth(method = "gam", formula = y ~ s(x, bs = 'cc', k = 19),
+                se = TRUE, alpha = 0.5) +
+    labs(x = "Year", y = "Nominal CPUE (t/trips)") +
+    scale_x_continuous(breaks = seq(2000, 2019, 2),
+                       limits = c(2000, 2019)) +
+    my_theme()
+p02
+
+p03 <- ggplot(data = filter(tab01, year != 2012),
+              aes(x = year, y = U)) +
+    geom_line() +
+    geom_point(pch = 21, colour = "black", fill = "white", size = 5) +
+    stat_smooth(method = "gam", formula = y ~ s(x, bs = 'cc', k = 19),
+                se = TRUE, alpha = 0.5) +
+    labs(x = "Year", y = "Nominal CPUE (t/trips)") +
+    scale_x_continuous(breaks = seq(2000, 2019, 2),
+                       limits = c(2000, 2019)) +
+    my_theme()
+p03
+
+#####@> Looking to all graphics together...
+(p00 + p02) / (p01 + p03)
 
 ########################################################################
 ##

@@ -176,14 +176,14 @@ p00 <- tm_shape(World, xlim = c(-100, 40), ylim = c(-30, 50)) +
     tm_grid(x = seq(-100, 40, by = 20), y = seq(-30, 50, by = 10)) +
     tm_shape(db06.sp) +
     tm_dots(col = "probability", palette = "plasma", size = 0.05,
-            title = "Probability", shape = 15, alpha = 0.5) +
+            title = "Probabilidade", shape = 15, alpha = 0.5) +
     tm_xlab(text = "Longitude", size = 1) +
     tm_ylab(text = "Latitude", size = 1) +
     tm_layout(scale = 2, legend.position = c("left", "top"),
               bg.color = "white", legend.bg.color = "white",
               legend.frame = "black") +
     tm_scale_bar(width = 0.15, position = c("left", "bottom")) +
-    tm_credits("Source: FishBase")
+    tm_credits("Fonte: FishBase")
 p00
 
 #####@> Watching only to Southern area of the West Atlantic
@@ -194,14 +194,14 @@ p01 <- tm_shape(World, xlim = c(-50, -30), ylim = c(-28, -18)) +
     tm_grid(x = seq(-50, -30, by = 5), y = seq(-28, -18, by = 2)) +
     tm_shape(tmp) +
     tm_dots(col = "probability", palette = "plasma", size = 1,
-            title = "Probability", shape = 16) +
+            title = "Probabilidade", shape = 16) +
     tm_xlab(text = "Longitude", size = 1) +
     tm_ylab(text = "Latitude", size = 1) +
     tm_layout(scale = 2, legend.position = c("left", "top"),
               bg.color = "white", legend.bg.color = "white",
               legend.frame = "black") +
     tm_scale_bar(width = 0.15, position = c("left", "bottom")) +
-    tm_credits("Source: FishBase")
+    tm_credits("Fonte: FishBase")
 p01
 
 ######@> Working with Rebuilding fisheries catches dataset...
@@ -213,8 +213,9 @@ p03 <- db01 %>%
     ggplot(data = ., aes(x = year, y = catch)) +
     geom_line() +
     geom_point(pch = 21, fill = "white", colour = "black", size = 5) +
-    labs(x = "Year", y = "Total catch (t)",
-         caption = "Source: Rebuilding fish catches") +
+    labs(x = "Ano", y = "Captura total (t)",
+         caption = "Fonte: Reconstrução das capturas.
+                    Freire et al. (2015)") +
     facet_wrap(~ sector, scales = "free_x") +
     scale_x_continuous(limits = c(1978, 2007)) +
     scale_y_continuous(expand = c(0, 0), limits = c(-5, 1250)) +
@@ -231,8 +232,8 @@ p04 <- db02 %>%
     geom_line() +
     stat_smooth(method = "gam", formula = y ~ s(x, k = 22, bs = "cc")) +
     geom_point(pch = 21, fill = "white", colour = "black", size = 5) +
-    labs(x = "Year", y = "Total catch (t)",
-         caption = "Source: PMAP-SP / Instituto de Pesca de São Paulo") +
+    labs(x = "Ano", y = "Captura total (t)",
+         caption = "Fonte: PMAP-SP / Instituto de Pesca de São Paulo") +
     scale_x_continuous(limits = c(1998, 2019), breaks = seq(1998, 2020, 2)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 1000)) +
     my_theme()
@@ -246,8 +247,8 @@ p05 <- db02 %>%
     geom_line() +
     stat_smooth(method = "gam", formula = y ~ s(x)) +
     geom_point(pch = 21, fill = "white", colour = "black", size = 5) +
-    labs(x = "Month", y = "Total catch (t)",
-         caption = "Source: PMAP-SP / Instituto de Pesca de São Paulo") +
+    labs(x = "Mês", y = "Captura total (t)",
+         caption = "Fonte: PMAP-SP / Instituto de Pesca de São Paulo") +
     scale_x_continuous(limits = c(1, 12), breaks = seq(1, 12, 1)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 1300)) +
     my_theme()
@@ -264,8 +265,8 @@ p06 <- db02 %>%
     geom_line() +
     stat_smooth(method = "gam", formula = y ~ s(x, k = 3)) +
     geom_point(pch = 21, fill = "white", colour = "black", size = 5) +
-    labs(x = "Season", y = "Total catch (t)",
-         caption = "Source: PMAP-SP / Instituto de Pesca de São Paulo") +
+    labs(x = "Trimestre", y = "Captura total (t)",
+         caption = "Fonte: PMAP-SP / Instituto de Pesca de São Paulo") +
     scale_x_continuous(limits = c(1, 4), breaks = seq(1, 4, 1)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 3000)) +
     my_theme()
@@ -285,8 +286,8 @@ p07 <- sc %>%
     geom_line() +
     stat_smooth(method = "gam", formula = y ~ s(x, k = 18, bs = "cc")) +
     geom_point(pch = 21, fill = "white", colour = "black", size = 5) +
-    labs(x = "Year", y = "Total catch (t)",
-         caption = "Source: PMAP-SC / Universidade do Vale do Itajaí") +
+    labs(x = "Ano", y = "Captura total (t)",
+         caption = "Fonte: PMAP-SC / Universidade do Vale do Itajaí") +
     scale_x_continuous(limits = c(2000, 2019), breaks = seq(2000, 2020, 2)) +
     scale_y_continuous(expand = c(0, 0), limits = c(-30, 1000)) +
     my_theme()
@@ -300,8 +301,8 @@ p08 <- sc %>%
     geom_line() +
     stat_smooth(method = "gam", formula = y ~ s(x)) +
     geom_point(pch = 21, fill = "white", colour = "black", size = 5) +
-    labs(x = "Month", y = "Total catch (t)",
-         caption = "Source: PMAP-SC / Universidade do Vale do Itajaí") +
+    labs(x = "Mês", y = "Captura total (t)",
+         caption = "Fonte: PMAP-SC / Universidade do Vale do Itajaí") +
     scale_x_continuous(limits = c(1, 12), breaks = seq(1, 12, 1)) +
     scale_y_continuous(expand = c(0, 0), limits = c(-200, 1300)) +
     my_theme()
@@ -318,8 +319,8 @@ p09 <- sc %>%
     geom_line() +
     stat_smooth(method = "gam", formula = y ~ s(x, k = 3)) +
     geom_point(pch = 21, fill = "white", colour = "black", size = 5) +
-    labs(x = "Season", y = "Total catch (t)",
-         caption = "Source: PMAP-SC / Universidade do Vale do Itajaí") +
+    labs(x = "Trimestre", y = "Captura total (t)",
+         caption = "Fonte: PMAP-SC / Universidade do Vale do Itajaí") +
     scale_x_continuous(limits = c(1, 4), breaks = seq(1, 4, 1)) +
     scale_y_continuous(expand = c(0, 0), limits = c(-300, 3000)) +
     my_theme()
@@ -361,7 +362,7 @@ tmp00 <- data.frame(year = seq(1978, 2019, 1))
 #####@> Rebuilding fisheries catches...
 tmp01 <- db01 %>%
     group_by(year) %>%
-    summarise(rebuild = sum(catch, na.rm = TRUE)) %>%
+    summarise(reconstrução = sum(catch, na.rm = TRUE)) %>%
     as.data.frame()
 
 #####@> PMAP-SP...
@@ -396,41 +397,41 @@ col <- gg_color_hue(4)
 
 ####@> figure...
 tmp <- db %>%
-    select(year, rebuild, total) %>%
+    select(year, reconstrução, total) %>%
     gather(., key = "Dataset", "values", 2:3) %>%
     as.data.frame()
 p10 <- ggplot(data = tmp, aes(x = year, y = values,
                               colour = Dataset, fill = Dataset)) +
     geom_line(alpha = 0.2, size = 1.4) +
     geom_point(pch = 21, size = 6, alpha = 0.5) +
-    labs(x = "Year", y = "Total catch (t)") +
+    labs(x = "Ano", y = "Captura total (t)") +
     scale_x_continuous(limits = c(1978, 2020),
                        breaks = seq(1978, 2020, 2)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 2000)) +
     scale_colour_manual(values = col[3:4]) +
     scale_fill_manual(values = col[3:4]) +
     my_theme() +
-    theme(legend.position = c(0.96, 0.95))
+    theme(legend.position = c(0.95, 0.95))
 p10
 
 ######@> Creating scenarios - based on proportions observed in other
 ######@> states...
 final <- db %>%
     select(year, total) %>%
-    rename(scenario01 = total) %>%
-    mutate(scenario02 = scenario01 * 1.4,
-           scenario03 = scenario01 * 1.5,
-           scenario04 = scenario01 * 1.6) %>%
-    filter(!is.na(scenario01)) %>%
+    rename(cenário01 = total) %>%
+    mutate(cenário02 = cenário01 * 1.4,
+           cenário03 = cenário01 * 1.5,
+           cenário04 = cenário01 * 1.6) %>%
+    filter(!is.na(cenário01)) %>%
     as.data.frame()
 
 ####@> figure...
 tmp <- final %>%
-    gather(., key = "Scenarios", "values", 2:5) %>%
+    gather(., key = "Cenários", "values", 2:5) %>%
     as.data.frame()
-p11 <- ggplot(data = tmp, aes(x = year, y = values, fill = Scenarios)) +
+p11 <- ggplot(data = tmp, aes(x = year, y = values, fill = Cenários)) +
     geom_area(colour = "black", alpha = 0.5) +
-    labs(x = "Year", y = "Total catch (t)") +
+    labs(x = "Ano", y = "Captura total (t)") +
     scale_x_continuous(limits = c(2000, 2020),
                        breaks = seq(2000, 2020, 1)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 10000)) +
